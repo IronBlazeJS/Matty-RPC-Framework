@@ -1,6 +1,8 @@
 package com.matty.rpc.test;
 
 import com.matty.rpc.api.HelloService;
+import com.matty.rpc.registry.DefaultServiceRegistry;
+import com.matty.rpc.registry.ServiceRegistry;
 import com.matty.rpc.server.RpcServer;
 
 /**
@@ -12,8 +14,10 @@ import com.matty.rpc.server.RpcServer;
 public class TestServer {
     public static void main(String[] args) {
         HelloService helloService = new HelloServiceImpl();
-        RpcServer rpcServer = new RpcServer();
-        //注册HelloServiceImpl服务
-        rpcServer.register(helloService, 9000);
+        ServiceRegistry serviceRegistry = new DefaultServiceRegistry();
+        // 注册服务
+        serviceRegistry.register(helloService);
+        RpcServer rpcServer = new RpcServer(serviceRegistry);
+        rpcServer.start(9000);
     }
 }
