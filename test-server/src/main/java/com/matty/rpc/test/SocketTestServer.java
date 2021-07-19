@@ -3,6 +3,7 @@ package com.matty.rpc.test;
 import com.matty.rpc.api.HelloService;
 import com.matty.rpc.registry.DefaultServiceRegistry;
 import com.matty.rpc.registry.ServiceRegistry;
+import com.matty.rpc.serializer.HessianSerializer;
 import com.matty.rpc.socket.server.SocketServer;
 
 /**
@@ -18,6 +19,7 @@ public class SocketTestServer {
         // 注册服务
         serviceRegistry.register(helloService);
         SocketServer socketServer = new SocketServer(serviceRegistry);
+        socketServer.setSerializer(new HessianSerializer());
         socketServer.start(9000);
     }
 }

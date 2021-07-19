@@ -1,5 +1,7 @@
 package com.matty.rpc;
 
+import com.matty.rpc.serializer.CommonSerializer;
+
 /**
  * ClassName: RpcServer
  * author: Matty Roslak
@@ -9,5 +11,7 @@ package com.matty.rpc;
 public interface RpcServer {
 
     void start(int port);
+
+    void setSerializer(CommonSerializer serializer);
 
 }

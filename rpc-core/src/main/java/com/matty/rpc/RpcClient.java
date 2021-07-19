@@ -1,6 +1,7 @@
 package com.matty.rpc;
 
 import com.matty.rpc.entity.RpcRequest;
+import com.matty.rpc.serializer.CommonSerializer;
 
 /**
  * ClassName: RpcClient
@@ -11,5 +12,7 @@ import com.matty.rpc.entity.RpcRequest;
 public interface RpcClient {
 
     Object sendRequest(RpcRequest rpcRequest);
+
+    void setSerializer(CommonSerializer serializer);
 
 }
