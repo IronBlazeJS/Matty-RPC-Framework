@@ -2,6 +2,7 @@ package com.matty.rpc.entity;
 
 import com.matty.rpc.enumeration.ResponseCode;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -12,6 +13,7 @@ import java.io.Serializable;
  * 服务端处理完后，向客户端返回的对象
  */
 @Data
+@NoArgsConstructor
 public class RpcResponse<T> implements Serializable {
     /**
      *响应状态码

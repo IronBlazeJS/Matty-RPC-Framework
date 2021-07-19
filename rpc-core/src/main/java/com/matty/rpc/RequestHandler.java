@@ -1,4 +1,4 @@
-package com.matty.rpc.server;
+package com.matty.rpc;
 
 import com.matty.rpc.entity.RpcRequest;
 import com.matty.rpc.entity.RpcResponse;

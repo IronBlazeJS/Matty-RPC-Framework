@@ -1,7 +1,6 @@
-package com.matty.rpc.client;
+package com.matty.rpc;
 
 import com.matty.rpc.entity.RpcRequest;
-import com.matty.rpc.entity.RpcResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,12 +17,10 @@ public class RpcClientProxy implements InvocationHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(RpcClientProxy.class);
 
-    private String host;
-    private int port;
+    private final RpcClient client;
 
-    public RpcClientProxy(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public RpcClientProxy(RpcClient client) {
+        this.client = client;
     }
 
     // 创建proxy对象实例
@@ -38,14 +35,8 @@ public class RpcClientProxy implements InvocationHandler {
 
         logger.info("调用方法：{}#{}", method.getDeclaringClass().getName(), method.getName());
 
-        RpcRequest rpcRequest = RpcRequest.builder()
-                .interfaceName(method.getDeclaringClass().getName())
-                .methodName(method.getName())
-                .parameters(args)
-                .paramTypes(method.getParameterTypes())
-                .build();
-        // 实例化客户端对象，准备发送请求
-        RpcClient rpcClient = new RpcClient();
-        return rpcClient.sendRequest(rpcRequest, host, port);
+        RpcRequest rpcRequest = new RpcRequest(method.getDeclaringClass().getName(),
+                method.getName(), args, method.getParameterTypes());
+        return client.sendRequest(rpcRequest);
     }
 }

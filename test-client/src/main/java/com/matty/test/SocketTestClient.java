@@ -2,7 +2,8 @@ package com.matty.test;
 
 import com.matty.rpc.api.HelloObject;
 import com.matty.rpc.api.HelloService;
-import com.matty.rpc.client.RpcClientProxy;
+import com.matty.rpc.RpcClientProxy;
+import com.matty.rpc.socket.client.SocketClient;
 
 /**
  * ClassName: TestClient
@@ -10,10 +11,11 @@ import com.matty.rpc.client.RpcClientProxy;
  * date: 2021/7/16  22:11
  * 测试用客户端
  */
-public class TestClient {
+public class SocketTestClient {
     public static void main(String[] args) {
+        SocketClient client = new SocketClient("127.0.0.1", 9000);
         //接口与代理对象之间的中介对象
-        RpcClientProxy proxy = new RpcClientProxy("127.0.0.1", 9000);
+        RpcClientProxy proxy = new RpcClientProxy(client);
         //创建代理对象
         HelloService helloService = proxy.getProxy(HelloService.class);
         //接口方法的参数对象

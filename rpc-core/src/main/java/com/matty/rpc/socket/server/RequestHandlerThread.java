@@ -1,5 +1,6 @@
-package com.matty.rpc.server;
+package com.matty.rpc.socket.server;
 
+import com.matty.rpc.RequestHandler;
 import com.matty.rpc.entity.RpcRequest;
 import com.matty.rpc.entity.RpcResponse;
 import com.matty.rpc.registry.ServiceRegistry;
@@ -15,7 +16,7 @@ import java.net.Socket;
  * ClassName: RequestHandlerThread
  * author: Matty Roslak
  * date: 2021/7/18  21:49
- * 处理客户端Request的工作线程
+ * IO传输模式|处理客户端RpcRequest的工作线程
  */
 public class RequestHandlerThread implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandlerThread.class);
