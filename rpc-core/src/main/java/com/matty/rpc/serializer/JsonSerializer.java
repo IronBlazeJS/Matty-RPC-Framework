@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.matty.rpc.entity.RpcRequest;
 import com.matty.rpc.enumeration.SerializerCode;
+import com.matty.rpc.exception.SerializeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +28,7 @@ public class JsonSerializer implements CommonSerializer{
             return objectMapper.writeValueAsBytes(obj);
         }catch (JsonProcessingException e){
             logger.error("序列化时有错误发生：{}", e.getMessage());
-            e.printStackTrace();
-            return null;
+            throw new SerializeException("序列化时有错误发生");
         }
     }
 
@@ -44,8 +44,7 @@ public class JsonSerializer implements CommonSerializer{
             return obj;
         }catch (IOException e){
             logger.error("反序列化时有错误发生：{}", e.getMessage());
-            e.printStackTrace();
-            return null;
+            throw new SerializeException("反序列化时有错误发生");
         }
     }
 
