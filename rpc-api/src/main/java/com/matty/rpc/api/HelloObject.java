@@ -2,6 +2,7 @@ package com.matty.rpc.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -14,6 +15,7 @@ import java.io.Serializable;
 //自动加上所有属性的get set toString hashCode equals方法
 @Data
 //添加一个含有所有已声明字段属性参数的构造函数
+@NoArgsConstructor
 @AllArgsConstructor
 public class HelloObject implements Serializable {
     //Serializable序列化接口没有任何方法或者字段，只是用于标识可序列化的语义。
