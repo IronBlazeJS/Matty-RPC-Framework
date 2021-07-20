@@ -1,6 +1,8 @@
 package com.matty.rpc;
 
 import com.matty.rpc.entity.RpcRequest;
+import com.matty.rpc.entity.RpcResponse;
+import com.matty.rpc.enumeration.ResponseCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,17 +29,17 @@ public class RequestHandler {
         } catch (IllegalAccessException | InvocationTargetException e) {
             logger.info("调用或发送时有错误发生：" + e);
         }
-        return result;
+        return RpcResponse.success(result, rpcRequest.getRequestId());
     }
 
     private Object invokeTargetMethod(RpcRequest rpcRequest, Object service) throws InvocationTargetException, IllegalAccessException {
-        Method method = null;
+        Method method;
         try {
             //getClass()获取的是实例对象的类型
             // 先获取方法method对象
             method = service.getClass().getMethod(rpcRequest.getMethodName(), rpcRequest.getParamTypes());
         } catch (NoSuchMethodException e) {
-            logger.info("调用或发送时有错误发生：" + e);
+            return RpcResponse.fail(ResponseCode.METHOD_NOT_FOUND, rpcRequest.getRequestId());
         }
         // 再具体调用method对象对应的方法，并返回
         return method.invoke(service, rpcRequest.getParameters());

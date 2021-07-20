@@ -11,6 +11,7 @@ import com.matty.rpc.serializer.CommonSerializer;
 import com.matty.rpc.serializer.HessianSerializer;
 import com.matty.rpc.serializer.JsonSerializer;
 import com.matty.rpc.serializer.KryoSerializer;
+import com.matty.rpc.util.RpcMessageChecker;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -81,9 +82,10 @@ public class NettyClient implements RpcClient {
                 channel.closeFuture().sync();
                 //AttributeMap<AttributeKey, AttributeValue>是绑定在Channel上的，可以设置用来获取通道对象
                 // 设置key
-                AttributeKey<RpcResponse> key = AttributeKey.valueOf("rpcResponse");
+                AttributeKey<RpcResponse> key = AttributeKey.valueOf("rpcResponse" + rpcRequest.getRequestId());
                 //get()阻塞获取value
                 RpcResponse rpcResponse = channel.attr(key).get();
+                RpcMessageChecker.check(rpcRequest, rpcResponse);
                 return rpcResponse.getData();
             }
         }catch (InterruptedException e){
