@@ -1,6 +1,7 @@
 package com.matty.rpc.util;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import lombok.NoArgsConstructor;
 
 import java.util.concurrent.*;
 
@@ -10,6 +11,7 @@ import java.util.concurrent.*;
  * date: 2021/7/19  20:47
  * 创建ThreadPool（线程池）工具类
  */
+@NoArgsConstructor
 public class ThreadPoolFactory {
     /**
      * 线程池参数
@@ -18,9 +20,6 @@ public class ThreadPoolFactory {
     private static final int MAXIMUM_POOL_SIZE = 100;
     private static final int KEEP_ALIVE_TIME = 1;
     private static final int BLOCKING_QUEUE_CAPACITY = 100;
-
-    private ThreadPoolFactory(){
-    }
 
     public static ExecutorService createDefaultThreadPool(String threadNamePrefix){
         return createDefaultThreadPool(threadNamePrefix, false);
