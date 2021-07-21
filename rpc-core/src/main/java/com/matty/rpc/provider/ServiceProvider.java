@@ -10,13 +10,15 @@ public interface ServiceProvider {
 
     /**
      * 将一个服务注册进注册表
+     *
      * @param service 待注册的服务实体对象
-     * @param <T> 服务实体的类型
+     * @param <T>     服务实体的类型
      */
     <T> void addServiceProvider(T service, Class<T> serviceClass);
 
     /**
      * 根据服务名获取服务对象
+     *
      * @param serviceName
      * @return 服务对象
      */

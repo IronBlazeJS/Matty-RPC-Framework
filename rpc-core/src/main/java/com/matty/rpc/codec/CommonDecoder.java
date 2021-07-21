@@ -30,7 +30,7 @@ public class CommonDecoder extends ReplayingDecoder {
         //从缓冲区中读取数据
         // 最开始的一段数据是魔数
         int magic = in.readInt();
-        if(magic != MAGIC_NUMBER){
+        if (magic != MAGIC_NUMBER) {
             logger.error("不识别的协议包：{}", magic);
             throw new RpcException(RpcError.UNKNOWN_PROTOCOL);
         }
@@ -38,11 +38,11 @@ public class CommonDecoder extends ReplayingDecoder {
         // 第二段是包类型，根据包类型执行是request还是response，存到packageClass中
         int packageCode = in.readInt();
         Class<?> packageClass;
-        if(packageCode == PackageType.REQUEST_PACK.getCode()){
+        if (packageCode == PackageType.REQUEST_PACK.getCode()) {
             packageClass = RpcRequest.class;
-        }else if (packageCode == PackageType.RESPONSE_PACK.getCode()){
+        } else if (packageCode == PackageType.RESPONSE_PACK.getCode()) {
             packageClass = RpcResponse.class;
-        }else {
+        } else {
             logger.error("不识别的数据包：{}", packageCode);
             throw new RpcException(RpcError.UNKNOWN_PACKAGE_TYPE);
         }
@@ -50,7 +50,7 @@ public class CommonDecoder extends ReplayingDecoder {
         // 第三段是序列化器类型 就是枚举类里面的那个code
         int serializerCode = in.readInt();
         CommonSerializer serializer = CommonSerializer.getByCode(serializerCode);
-        if(serializer == null){
+        if (serializer == null) {
             logger.error("不识别的反序列化器：{}", serializerCode);
             throw new RpcException(RpcError.UNKNOWN_SERIALIZER);
         }

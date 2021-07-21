@@ -1,15 +1,16 @@
 package com.matty.rpc.transport.netty.server;
 
-import com.matty.rpc.provider.ServiceProvider;
-import com.matty.rpc.provider.ServiceProviderImpl;
-import com.matty.rpc.register.NacosServiceRegistry;
-import com.matty.rpc.register.ServiceRegistry;
-import com.matty.rpc.transport.RpcServer;
 import com.matty.rpc.codec.CommonDecoder;
 import com.matty.rpc.codec.CommonEncoder;
 import com.matty.rpc.enumeration.RpcError;
 import com.matty.rpc.exception.RpcException;
+import com.matty.rpc.hook.ShutdownHook;
+import com.matty.rpc.provider.ServiceProvider;
+import com.matty.rpc.provider.ServiceProviderImpl;
+import com.matty.rpc.register.NacosServiceRegistry;
+import com.matty.rpc.register.ServiceRegistry;
 import com.matty.rpc.serializer.CommonSerializer;
+import com.matty.rpc.transport.RpcServer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -48,9 +49,9 @@ public class NettyServer implements RpcServer {
     }
 
     /**
-     * @description 将服务保存在本地的注册表，同时注册到Nacos
      * @param service, serviceClass
      * @return [void]
+     * @description 将服务保存在本地的注册表，同时注册到Nacos
      */
     @Override
     public <T> void publishService(T service, Class<T> serviceClass) {
@@ -101,6 +102,10 @@ public class NettyServer implements RpcServer {
                     });
             //绑定端口，启动Netty，sync()代表阻塞主Server线程，以执行Netty线程，如果不阻塞Netty就直接被下面shutdown了
             ChannelFuture future = serverBootstrap.bind(host, port).sync();
+
+            //添加注销服务的钩子，服务端关闭时才会执行
+            ShutdownHook.getShutdownHook().addClearAllHook();
+
             //等确定通道关闭了，关闭future回到主Server线程
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {

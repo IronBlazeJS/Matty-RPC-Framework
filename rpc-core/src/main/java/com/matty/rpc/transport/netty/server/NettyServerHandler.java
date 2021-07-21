@@ -2,7 +2,7 @@ package com.matty.rpc.transport.netty.server;
 
 import com.matty.rpc.handler.RequestHandler;
 import com.matty.rpc.entity.RpcRequest;
-import com.matty.rpc.util.ThreadPoolFactory;
+import com.matty.rpc.factory.ThreadPoolFactory;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -22,11 +22,12 @@ import java.util.concurrent.ExecutorService;
 public class NettyServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyServerHandler.class);
-    private static RequestHandler requestHandler;
-    private static final String THREAD_NAME_PREFIX = "netty-server-handler";
-    private static final ExecutorService threadPool;
 
-    static{
+    private static final String THREAD_NAME_PREFIX = "netty-server-handler";
+    private final ExecutorService threadPool;
+    private final RequestHandler requestHandler;
+
+    public NettyServerHandler() {
         requestHandler = new RequestHandler();
         //引入异步业务线程池，避免长时间的耗时业务阻塞netty本身的worker工作线程，耽误了同一个Selector中其他任务的执行
         threadPool = ThreadPoolFactory.createDefaultThreadPool(THREAD_NAME_PREFIX);
@@ -34,6 +35,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcRequest> 
 
     /**
      * 通道读取就绪事件--接受客户端请求
+     *
      * @param ctx
      * @param msg
      * @throws Exception
@@ -41,14 +43,14 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcRequest> 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcRequest msg) throws Exception {
         threadPool.execute(() -> {
-            try{
+            try {
                 logger.info("服务端接收到请求：{}", msg);
                 Object response = requestHandler.handle(msg);
                 //注意这里的通道是workGroup中的，而NettyServer中创建的是bossGroup的，不要混淆
                 ChannelFuture future = ctx.writeAndFlush(response);
                 //添加一个监听器到channelfuture来检测是否所有的数据包都发出，然后关闭通道
                 future.addListener(ChannelFutureListener.CLOSE);
-            }finally {
+            } finally {
                 ReferenceCountUtil.release(msg);
             }
         });

@@ -69,6 +69,7 @@ public class SocketClient implements RpcClient {
             throw new RpcException("服务调用失败：", e);
         }
     }
+
     @Override
     public void setSerializer(CommonSerializer serializer) {
         this.serializer = serializer;

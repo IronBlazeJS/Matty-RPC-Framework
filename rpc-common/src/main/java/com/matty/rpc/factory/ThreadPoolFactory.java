@@ -1,4 +1,4 @@
-package com.matty.rpc.util;
+package com.matty.rpc.factory;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.NoArgsConstructor;
@@ -21,11 +21,11 @@ public class ThreadPoolFactory {
     private static final int KEEP_ALIVE_TIME = 1;
     private static final int BLOCKING_QUEUE_CAPACITY = 100;
 
-    public static ExecutorService createDefaultThreadPool(String threadNamePrefix){
+    public static ExecutorService createDefaultThreadPool(String threadNamePrefix) {
         return createDefaultThreadPool(threadNamePrefix, false);
     }
 
-    public static ExecutorService createDefaultThreadPool(String threadNamePrefix, Boolean daemon){
+    public static ExecutorService createDefaultThreadPool(String threadNamePrefix, Boolean daemon) {
         /**
          * 设置上限为100个线程的阻塞队列
          */
@@ -35,10 +35,10 @@ public class ThreadPoolFactory {
     }
 
     /**
-     * @description 创建ThreadFactory，如果threadNamePrefix不为空则使用自建ThreadFactory，否则使用defaultThreadFactory
      * @param threadNamePrefix 作为创建的线程名字的前缀，指定有意义的线程名称，方便出错时回溯
-     * @param daemon 指定是否为Daemon Thread(守护线程)，当所有的非守护线程结束时，程序也就终止了，同时会杀死进程中的所有守护线程
+     * @param daemon           指定是否为Daemon Thread(守护线程)，当所有的非守护线程结束时，程序也就终止了，同时会杀死进程中的所有守护线程
      * @return [java.util.concurrent.ThreadFactory]
+     * @description 创建ThreadFactory，如果threadNamePrefix不为空则使用自建ThreadFactory，否则使用defaultThreadFactory
      * @date [2021-03-10 17:50]
      */
     private static ThreadFactory createThreadFactory(String threadNamePrefix, Boolean daemon) {

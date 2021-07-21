@@ -26,19 +26,19 @@ public class ServiceProviderImpl implements ServiceProvider {
     private static final Map<String, Object> serviceMap = new ConcurrentHashMap<>();
 
     /**
-     *  用来存放服务名称(即接口名）
+     * 用来存放服务名称(即接口名）
      */
     private static final Set<String> registeredService = ConcurrentHashMap.newKeySet();
 
     /**
-     * @description 保存服务到本地服务注册表
      * @param service, serviceClass 服务的实现类对象，服务类（接口）
      * @return [void]
+     * @description 保存服务到本地服务注册表
      */
     @Override
     public <T> void addServiceProvider(T service, Class<T> serviceClass) {
         String serviceName = serviceClass.getCanonicalName();
-        if(registeredService.contains(serviceName)){
+        if (registeredService.contains(serviceName)) {
             return;
         }
         registeredService.add(serviceName);
@@ -49,7 +49,7 @@ public class ServiceProviderImpl implements ServiceProvider {
     @Override
     public Object getServiceProvider(String serviceName) {
         Object service = serviceMap.get(serviceName);
-        if(service == null){
+        if (service == null) {
             throw new RpcException(RpcError.SERVICE_NOT_FOUND);
         }
         return service;

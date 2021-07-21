@@ -22,6 +22,6 @@ public class HelloServiceImpl implements HelloService {
     public String hello(HelloObject object) {
         //使用{}可以直接将getMessage()内容输出
         logger.info("接收到：{}", object.getMessage());
-        return "这是调用的返回值：id= " + object.getId() + " 本次处理来自Netty服务";
+        return "这是调用的返回值：id= " + object.getId() + " 本次处理来自Netty服务端";
     }
 }

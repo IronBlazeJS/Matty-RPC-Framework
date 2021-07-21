@@ -11,9 +11,9 @@ import java.net.InetSocketAddress;
 public interface ServiceDiscovery {
 
     /**
-     * @description 根据服务名称查找服务端地址
      * @param serviceName
      * @return [java.net.InetSocketAddress]
+     * @description 根据服务名称查找服务端地址
      */
     InetSocketAddress lookupService(String serviceName);
 }

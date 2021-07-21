@@ -1,16 +1,16 @@
 package com.matty.rpc.transport.socket.server;
 
+import com.matty.rpc.enumeration.RpcError;
+import com.matty.rpc.exception.RpcException;
+import com.matty.rpc.factory.ThreadPoolFactory;
 import com.matty.rpc.handler.RequestHandler;
+import com.matty.rpc.hook.ShutdownHook;
 import com.matty.rpc.provider.ServiceProvider;
 import com.matty.rpc.provider.ServiceProviderImpl;
 import com.matty.rpc.register.NacosServiceRegistry;
 import com.matty.rpc.register.ServiceRegistry;
-import com.matty.rpc.transport.RpcServer;
-import com.matty.rpc.enumeration.RpcError;
-import com.matty.rpc.exception.RpcException;
-
 import com.matty.rpc.serializer.CommonSerializer;
-import com.matty.rpc.util.ThreadPoolFactory;
+import com.matty.rpc.transport.RpcServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
 
 /**
  * ClassName: RpcServer
@@ -40,7 +40,7 @@ public class SocketServer implements RpcServer {
     private final ServiceRegistry serviceRegistry;
     private final ServiceProvider serviceProvider;
 
-    public SocketServer(String host, int port){
+    public SocketServer(String host, int port) {
         this.host = host;
         this.port = port;
         serviceRegistry = new NacosServiceRegistry();
@@ -53,13 +53,14 @@ public class SocketServer implements RpcServer {
 
     /**
      * 服务保存到本地注册表，同时注册到Nacos
+     *
      * @param service
      * @param serviceClass
      * @param <T>
      */
     @Override
     public <T> void publishService(T service, Class<T> serviceClass) {
-        if (serializer == null){
+        if (serializer == null) {
             logger.error("未设置序列化器");
             throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
         }
@@ -72,17 +73,20 @@ public class SocketServer implements RpcServer {
      * 服务端启动
      */
     @Override
-    public void start(){
-        try(ServerSocket serverSocket = new ServerSocket(port)){
+    public void start() {
+        try (ServerSocket serverSocket = new ServerSocket()) {
+            serverSocket.bind(new InetSocketAddress(host, port));
             logger.info("服务器启动……");
+            //添加钩子，服务端关闭时会注销服务
+            ShutdownHook.getShutdownHook().addClearAllHook();
             Socket socket;
             //当未接收到连接请求时，accept()会一直阻塞
-            while ((socket = serverSocket.accept()) != null){
+            while ((socket = serverSocket.accept()) != null) {
                 logger.info("客户端连接！{}:{}", socket.getInetAddress(), socket.getPort());
-                threadPool.execute(new RequestHandlerThread(socket, requestHandler, serializer));
+                threadPool.execute(new SocketRequestHandlerThread(socket, requestHandler, serializer));
             }
             threadPool.shutdown();
-        }catch (IOException e){
+        } catch (IOException e) {
             logger.info("服务器启动时有错误发生：" + e);
         }
     }

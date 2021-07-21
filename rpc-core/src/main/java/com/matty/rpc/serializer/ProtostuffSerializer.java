@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * date: 2021/7/20  14:59
  * Protostuff序列化器
  */
-public class ProtostuffSerializer implements CommonSerializer{
+public class ProtostuffSerializer implements CommonSerializer {
 
     /**
      * 避免每次序列化都重新申请Buffer空间,用来存放对象序列化之后的数据
@@ -57,17 +57,17 @@ public class ProtostuffSerializer implements CommonSerializer{
     }
 
     /**
-     * @description 获取Schema
      * @param clazz
      * @return [io.protostuff.Schema]
+     * @description 获取Schema
      */
     private Schema getSchema(Class clazz) {
         //首先尝试从Map缓存中获取类对应的schema
         Schema schema = schemaCache.get(clazz);
-        if(Objects.isNull(schema)) {
+        if (Objects.isNull(schema)) {
             //新创建一个schema，RuntimeSchema就是将schema繁琐的创建过程封装了起来
             schema = RuntimeSchema.getSchema(clazz);
-            if(Objects.nonNull(schema)) {
+            if (Objects.nonNull(schema)) {
                 //缓存schema，方便下次直接使用
                 schemaCache.put(clazz, schema);
             }

@@ -24,18 +24,18 @@ public class HessianSerializer implements CommonSerializer {
     @Override
     public byte[] serialize(Object obj) {
         HessianOutput hessianOutput = null;
-        try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()){
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             hessianOutput = new HessianOutput(byteArrayOutputStream);
             hessianOutput.writeObject(obj);
             return byteArrayOutputStream.toByteArray();
-        }catch (IOException e){
+        } catch (IOException e) {
             logger.error("序列化时有错误发生" + e);
             throw new SerializeException("序列化时有错误发生");
-        }finally {
-            if(hessianOutput != null){
+        } finally {
+            if (hessianOutput != null) {
                 try {
                     hessianOutput.close();
-                }catch (IOException e){
+                } catch (IOException e) {
                     logger.error("关闭output流时有错误发生" + e);
                 }
             }
@@ -45,14 +45,14 @@ public class HessianSerializer implements CommonSerializer {
     @Override
     public Object deserialize(byte[] bytes, Class<?> clazz) {
         HessianInput hessianInput = null;
-        try(ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes)){
+        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes)) {
             hessianInput = new HessianInput(byteArrayInputStream);
             return hessianInput.readObject();
-        }catch (IOException e){
+        } catch (IOException e) {
             logger.error("反序列化时有错误发生" + e);
             throw new SerializeException("反序列化时有错误发生");
-        }finally {
-            if(hessianInput != null) {
+        } finally {
+            if (hessianInput != null) {
                 hessianInput.close();
             }
         }

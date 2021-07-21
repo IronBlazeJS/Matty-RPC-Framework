@@ -21,25 +21,26 @@ public class RpcResponse<T> implements Serializable {
      */
     private String requestId;
     /**
-     *响应状态码
+     * 响应状态码
      */
     private Integer statusCode;
     /**
-     *响应状态码对应的信息
+     * 响应状态码对应的信息
      */
     private String message;
     /**
-     *成功时的响应数据
+     * 成功时的响应数据
      */
     private T data;
 
     /**
      * 成功时服务端返回的对象
+     *
      * @param data
      * @param <T>
      * @return
      */
-    public static <T> RpcResponse<T> success(T data, String requestId){
+    public static <T> RpcResponse<T> success(T data, String requestId) {
         RpcResponse<T> response = new RpcResponse<>();
         response.setRequestId(requestId);
         response.setStatusCode(ResponseCode.SUCCESS.getCode());
@@ -49,11 +50,12 @@ public class RpcResponse<T> implements Serializable {
 
     /**
      * 失败时服务端返回的对象
+     *
      * @param code
      * @param <T>
      * @return
      */
-    public static <T> RpcResponse<T> fail(ResponseCode code, String requestId){
+    public static <T> RpcResponse<T> fail(ResponseCode code, String requestId) {
         RpcResponse<T> response = new RpcResponse<>();
         response.setRequestId(requestId);
         response.setStatusCode(code.getCode());

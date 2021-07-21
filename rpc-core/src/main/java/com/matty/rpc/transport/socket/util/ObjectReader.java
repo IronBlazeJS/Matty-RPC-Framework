@@ -57,17 +57,17 @@ public class ObjectReader {
     }
 
     /**
-     * @description 字节数组转换为Int
      * @param src
      * @return [int]
+     * @description 字节数组转换为Int
      * @date [2021-03-10 21:57]
      */
     private static int bytesToInt(byte[] src) {
         int value;
         value = ((src[0] & 0xFF) << 24)
-                |((src[1] & 0xFF) << 16)
-                |((src[2] & 0xFF) << 8)
-                |(src[3] & 0xFF);
+                | ((src[1] & 0xFF) << 16)
+                | ((src[2] & 0xFF) << 8)
+                | (src[3] & 0xFF);
         return value;
     }
 }

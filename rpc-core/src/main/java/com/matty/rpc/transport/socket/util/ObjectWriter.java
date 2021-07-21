@@ -22,7 +22,7 @@ public class ObjectWriter {
 
     public static void writeObject(OutputStream out, Object object, CommonSerializer serializer) throws IOException {
         out.write(intToBytes(MAGIC_NUMBER));
-        if(object instanceof RpcRequest) {
+        if (object instanceof RpcRequest) {
             out.write(intToBytes(PackageType.REQUEST_PACK.getCode()));
         } else {
             out.write(intToBytes(PackageType.RESPONSE_PACK.getCode()));
@@ -35,15 +35,15 @@ public class ObjectWriter {
     }
 
     /**
-     * @description 将Int转换为字节数组
      * @param value
      * @return [byte[]]
+     * @description 将Int转换为字节数组
      */
     private static byte[] intToBytes(int value) {
         byte[] src = new byte[4];
-        src[0] = (byte) ((value>>24) & 0xFF);
-        src[1] = (byte) ((value>>16) & 0xFF);
-        src[2] = (byte) ((value>>8) & 0xFF);
+        src[0] = (byte) ((value >> 24) & 0xFF);
+        src[1] = (byte) ((value >> 16) & 0xFF);
+        src[2] = (byte) ((value >> 8) & 0xFF);
         src[3] = (byte) (value & 0xFF);
         return src;
     }

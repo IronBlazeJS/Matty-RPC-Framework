@@ -28,7 +28,7 @@ public class RequestHandler {
         serviceProvider = new ServiceProviderImpl();
     }
 
-    public Object handle(RpcRequest rpcRequest){
+    public Object handle(RpcRequest rpcRequest) {
         Object result = null;
         //从服务端本地注册表中获取服务实体
         Object service = serviceProvider.getServiceProvider(rpcRequest.getInterfaceName());

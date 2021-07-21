@@ -11,9 +11,9 @@ import java.net.InetSocketAddress;
 public interface ServiceRegistry {
 
     /**
-     * @description 将一个服务注册到注册表
      * @param serviceName, inetSocketAddress 服务名称，提供服务的地址
      * @return [void]
+     * @description 将一个服务注册到注册表
      */
     void register(String serviceName, InetSocketAddress inetSocketAddress);
 
