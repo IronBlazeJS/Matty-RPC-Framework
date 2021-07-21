@@ -1,15 +1,15 @@
 package com.matty.rpc.transport.netty.client;
 
-import com.matty.rpc.register.NacosServiceRegistry;
-import com.matty.rpc.register.ServiceRegistry;
-import com.matty.rpc.transport.RpcClient;
 import com.matty.rpc.entity.RpcRequest;
 import com.matty.rpc.entity.RpcResponse;
 import com.matty.rpc.enumeration.RpcError;
 import com.matty.rpc.exception.RpcException;
+import com.matty.rpc.register.NacosServiceDiscovery;
+import com.matty.rpc.register.ServiceDiscovery;
 import com.matty.rpc.serializer.CommonSerializer;
+import com.matty.rpc.transport.RpcClient;
 import com.matty.rpc.util.RpcMessageChecker;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +26,12 @@ import java.util.concurrent.atomic.AtomicReference;
 public class NettyClient implements RpcClient {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyClient.class);
-    private final ServiceRegistry serviceRegistry;
+    private final ServiceDiscovery serviceDiscovery;
 
     private CommonSerializer serializer;
 
     public NettyClient(){
-        serviceRegistry = new NacosServiceRegistry();
+        serviceDiscovery = new NacosServiceDiscovery();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class NettyClient implements RpcClient {
 
         try {
             //从Nacos获取提供对应服务的服务端地址
-            InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
+            InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest.getInterfaceName());
             //创建Netty通道连接
             Channel channel = ChannelProvider.get(inetSocketAddress, serializer);
             if (channel.isActive()) {
@@ -67,6 +67,7 @@ public class NettyClient implements RpcClient {
                 RpcMessageChecker.check(rpcRequest, rpcResponse);
                 result.set(rpcResponse.getData());
             } else {
+                channel.close();
                 //0表示”正常“退出程序，即如果当前程序还有在执行的任务，则等待所有任务执行完成以后再退出
                 System.exit(0);
             }

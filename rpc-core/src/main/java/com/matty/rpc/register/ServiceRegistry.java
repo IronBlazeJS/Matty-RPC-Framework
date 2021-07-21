@@ -6,7 +6,7 @@ import java.net.InetSocketAddress;
  * ClassName: ServiceRegistry
  * author: Matty Roslak
  * date: 2021/7/20  16:23
- * 服务注册中心通用接口
+ * 注册中心注册接口
  */
 public interface ServiceRegistry {
 
@@ -16,12 +16,5 @@ public interface ServiceRegistry {
      * @return [void]
      */
     void register(String serviceName, InetSocketAddress inetSocketAddress);
-
-    /**
-     * @description 根据服务名查找服务实体
-     * @param serviceName
-     * @return [java.net.InetSocketAddress] 服务实体
-     */
-    InetSocketAddress lookupService(String serviceName);
 
 }

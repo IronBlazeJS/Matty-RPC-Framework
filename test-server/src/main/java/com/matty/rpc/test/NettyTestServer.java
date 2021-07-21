@@ -8,6 +8,7 @@ import com.matty.rpc.serializer.KryoSerializer;
  * ClassName: NettyTestServer
  * author: Matty Roslak
  * date: 2021/7/19  16:53
+ * 测试用Netty服务端
  */
 public class NettyTestServer {
     public static void main(String[] args) {

@@ -51,16 +51,15 @@ public class NettyServer implements RpcServer {
      * @description 将服务保存在本地的注册表，同时注册到Nacos
      * @param service, serviceClass
      * @return [void]
-     * @date [2021-03-13 16:02]
      */
     @Override
-    public <T> void publishService(Object service, Class<T> serviceClass) {
+    public <T> void publishService(T service, Class<T> serviceClass) {
         if (serializer == null) {
             logger.error("未设置序列化器");
             throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
         }
         // 本地服务注册
-        serviceProvider.addServiceProvider(service);
+        serviceProvider.addServiceProvider(service, serviceClass);
         // 注册中心服务注册
         serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
         start();

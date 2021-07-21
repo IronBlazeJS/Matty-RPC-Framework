@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  * ClassName: HelloServiceImpl
  * author: Matty Roslak
  * date: 2021/7/11  23:59
- * 服务端api接口实现
+ * 服务端api接口实现  netty
  */
 public class HelloServiceImpl implements HelloService {
 
@@ -22,6 +22,6 @@ public class HelloServiceImpl implements HelloService {
     public String hello(HelloObject object) {
         //使用{}可以直接将getMessage()内容输出
         logger.info("接收到：{}", object.getMessage());
-        return "这是调用的返回值：id= " + object.getId();
+        return "这是调用的返回值：id= " + object.getId() + " 本次处理来自Netty服务";
     }
 }

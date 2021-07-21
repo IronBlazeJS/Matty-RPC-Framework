@@ -10,7 +10,7 @@ import com.matty.rpc.transport.socket.client.SocketClient;
  * ClassName: TestClient
  * author: Matty Roslak
  * date: 2021/7/16  22:11
- * 测试用客户端
+ * 测试用Socket客户端
  */
 public class SocketTestClient {
     public static void main(String[] args) {
