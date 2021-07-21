@@ -2,9 +2,9 @@ package com.matty.test;
 
 import com.matty.rpc.api.HelloObject;
 import com.matty.rpc.api.HelloService;
-import com.matty.rpc.RpcClientProxy;
+import com.matty.rpc.transport.RpcClientProxy;
 import com.matty.rpc.serializer.KryoSerializer;
-import com.matty.rpc.socket.client.SocketClient;
+import com.matty.rpc.transport.socket.client.SocketClient;
 
 /**
  * ClassName: TestClient
@@ -14,7 +14,7 @@ import com.matty.rpc.socket.client.SocketClient;
  */
 public class SocketTestClient {
     public static void main(String[] args) {
-        SocketClient client = new SocketClient("127.0.0.1", 9999);
+        SocketClient client = new SocketClient();
         client.setSerializer(new KryoSerializer());
         //接口与代理对象之间的中介对象
         RpcClientProxy proxy = new RpcClientProxy(client);

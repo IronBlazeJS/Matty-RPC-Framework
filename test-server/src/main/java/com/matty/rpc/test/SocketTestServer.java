@@ -1,10 +1,8 @@
 package com.matty.rpc.test;
 
 import com.matty.rpc.api.HelloService;
-import com.matty.rpc.registry.DefaultServiceRegistry;
-import com.matty.rpc.registry.ServiceRegistry;
 import com.matty.rpc.serializer.HessianSerializer;
-import com.matty.rpc.socket.server.SocketServer;
+import com.matty.rpc.transport.socket.server.SocketServer;
 
 /**
  * ClassName: TestServer
@@ -15,11 +13,8 @@ import com.matty.rpc.socket.server.SocketServer;
 public class SocketTestServer {
     public static void main(String[] args) {
         HelloService helloService = new HelloServiceImpl();
-        ServiceRegistry serviceRegistry = new DefaultServiceRegistry();
-        // 注册服务
-        serviceRegistry.register(helloService);
-        SocketServer socketServer = new SocketServer(serviceRegistry);
+        SocketServer socketServer = new SocketServer("127.0.0.1", 9998);
         socketServer.setSerializer(new HessianSerializer());
-        socketServer.start(9999);
+        socketServer.publishService(helloService, HelloService.class);
     }
 }

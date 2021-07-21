@@ -1,10 +1,10 @@
 package com.matty.test;
 
-import com.matty.rpc.RpcClient;
-import com.matty.rpc.RpcClientProxy;
+import com.matty.rpc.transport.RpcClient;
+import com.matty.rpc.transport.RpcClientProxy;
 import com.matty.rpc.api.HelloObject;
 import com.matty.rpc.api.HelloService;
-import com.matty.rpc.netty.client.NettyClient;
+import com.matty.rpc.transport.netty.client.NettyClient;
 import com.matty.rpc.serializer.HessianSerializer;
 
 /**
@@ -15,7 +15,7 @@ import com.matty.rpc.serializer.HessianSerializer;
  */
 public class NettyTestClient {
     public static void main(String[] args) {
-        RpcClient client = new NettyClient("127.0.0.1", 9999);
+        RpcClient client = new NettyClient();
         client.setSerializer(new HessianSerializer());
         RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
         HelloService helloService = rpcClientProxy.getProxy(HelloService.class);

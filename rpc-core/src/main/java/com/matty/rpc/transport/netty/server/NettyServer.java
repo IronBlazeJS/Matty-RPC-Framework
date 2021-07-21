@@ -1,14 +1,15 @@
-package com.matty.rpc.netty.server;
+package com.matty.rpc.transport.netty.server;
 
-import com.matty.rpc.RpcServer;
+import com.matty.rpc.provider.ServiceProvider;
+import com.matty.rpc.provider.ServiceProviderImpl;
+import com.matty.rpc.register.NacosServiceRegistry;
+import com.matty.rpc.register.ServiceRegistry;
+import com.matty.rpc.transport.RpcServer;
 import com.matty.rpc.codec.CommonDecoder;
 import com.matty.rpc.codec.CommonEncoder;
 import com.matty.rpc.enumeration.RpcError;
 import com.matty.rpc.exception.RpcException;
 import com.matty.rpc.serializer.CommonSerializer;
-import com.matty.rpc.serializer.HessianSerializer;
-import com.matty.rpc.serializer.JsonSerializer;
-import com.matty.rpc.serializer.KryoSerializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -18,6 +19,8 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.InetSocketAddress;
 
 /**
  * ClassName: NettyServer
@@ -29,14 +32,42 @@ public class NettyServer implements RpcServer {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
 
+    private final String host;
+    private final int port;
+
+    private final ServiceRegistry serviceRegistry;
+    private final ServiceProvider serviceProvider;
+
     private CommonSerializer serializer;
 
+    public NettyServer(String host, int port) {
+        this.host = host;
+        this.port = port;
+        serviceRegistry = new NacosServiceRegistry();
+        serviceProvider = new ServiceProviderImpl();
+    }
+
+    /**
+     * @description 将服务保存在本地的注册表，同时注册到Nacos
+     * @param service, serviceClass
+     * @return [void]
+     * @date [2021-03-13 16:02]
+     */
     @Override
-    public void start(int port) {
+    public <T> void publishService(Object service, Class<T> serviceClass) {
         if (serializer == null) {
             logger.error("未设置序列化器");
             throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
         }
+        // 本地服务注册
+        serviceProvider.addServiceProvider(service);
+        // 注册中心服务注册
+        serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
+        start();
+    }
+
+    @Override
+    public void start() {
         //用于处理客户端新连接的主”线程池“
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         //用于连接后处理IO事件的从”线程池“
@@ -70,7 +101,7 @@ public class NettyServer implements RpcServer {
                         }
                     });
             //绑定端口，启动Netty，sync()代表阻塞主Server线程，以执行Netty线程，如果不阻塞Netty就直接被下面shutdown了
-            ChannelFuture future = serverBootstrap.bind(port).sync();
+            ChannelFuture future = serverBootstrap.bind(host, port).sync();
             //等确定通道关闭了，关闭future回到主Server线程
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {

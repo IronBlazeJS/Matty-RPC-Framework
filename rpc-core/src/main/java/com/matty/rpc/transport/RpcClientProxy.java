@@ -1,4 +1,4 @@
-package com.matty.rpc;
+package com.matty.rpc.transport;
 
 import com.matty.rpc.entity.RpcRequest;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public class RpcClientProxy implements InvocationHandler {
         return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[]{clazz}, this);
     }
 
-    // 使用build设计模式生成RpcRequest对象，然后调用客户端的send方法把它发出去，最后拿到结果
+    // 生成RpcRequest对象，然后调用客户端的send方法把它发出去，最后拿到结果
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
 

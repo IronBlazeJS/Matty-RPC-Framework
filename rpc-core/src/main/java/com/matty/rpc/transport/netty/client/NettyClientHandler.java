@@ -1,4 +1,4 @@
-package com.matty.rpc.netty.client;
+package com.matty.rpc.transport.netty.client;
 
 import com.matty.rpc.entity.RpcResponse;
 import io.netty.channel.ChannelHandlerContext;
@@ -23,7 +23,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<RpcResponse>
         try {
             logger.info(String.format("客户端接收到消息：%s", msg));
             AttributeKey<RpcResponse> key = AttributeKey.valueOf("rpcResponse" + msg.getRequestId());
-            //将RpcResponse对象以 key 为 rpcResponse 放入 ChannelHandlerContext 中
+            //将RpcResponse对象以 key 为 rpcResponse + 请求id 放入 ChannelHandlerContext 中
             ctx.channel().attr(key).set(msg);
             //关闭客户端通道
             ctx.channel().close();

@@ -1,4 +1,4 @@
-package com.matty.rpc.socket.util;
+package com.matty.rpc.transport.socket.util;
 
 import com.matty.rpc.entity.RpcRequest;
 import com.matty.rpc.enumeration.PackageType;

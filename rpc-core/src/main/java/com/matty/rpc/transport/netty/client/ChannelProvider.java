@@ -1,4 +1,4 @@
-package com.matty.rpc.netty.client;
+package com.matty.rpc.transport.netty.client;
 
 import com.matty.rpc.codec.CommonDecoder;
 import com.matty.rpc.codec.CommonEncoder;

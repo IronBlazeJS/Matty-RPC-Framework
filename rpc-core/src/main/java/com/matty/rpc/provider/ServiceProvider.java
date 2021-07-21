@@ -1,25 +1,24 @@
-package com.matty.rpc.registry;
+package com.matty.rpc.provider;
 
 /**
- * ClassName: ServiceRegistry
+ * ClassName: ServiceProvider
  * author: Matty Roslak
- * date: 2021/7/18  21:14
- * 服务注册的通用接口（容器）
+ * date: 2021/7/20  16:43
+ * 保存和提供服务实例对象
  */
-public interface ServiceRegistry {
+public interface ServiceProvider {
 
     /**
      * 将一个服务注册进注册表
      * @param service 待注册的服务实体对象
      * @param <T> 服务实体的类型
      */
-    <T> void register(T service);
+    <T> void addServiceProvider(T service);
 
     /**
      * 根据服务名获取服务对象
      * @param serviceName
      * @return 服务对象
      */
-    Object getService(String serviceName);
-
+    Object getServiceProvider(String serviceName);
 }

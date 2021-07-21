@@ -1,9 +1,7 @@
 package com.matty.rpc.test;
 
 import com.matty.rpc.api.HelloService;
-import com.matty.rpc.netty.server.NettyServer;
-import com.matty.rpc.registry.DefaultServiceRegistry;
-import com.matty.rpc.registry.ServiceRegistry;
+import com.matty.rpc.transport.netty.server.NettyServer;
 import com.matty.rpc.serializer.KryoSerializer;
 
 /**
@@ -14,10 +12,8 @@ import com.matty.rpc.serializer.KryoSerializer;
 public class NettyTestServer {
     public static void main(String[] args) {
         HelloService helloService = new HelloServiceImpl();
-        ServiceRegistry registry = new DefaultServiceRegistry();
-        registry.register(helloService);
-        NettyServer server = new NettyServer();
+        NettyServer server = new NettyServer("127.0.0.1", 9999);
         server.setSerializer(new KryoSerializer());
-        server.start(9999);
+        server.publishService(helloService, HelloService.class);
     }
 }

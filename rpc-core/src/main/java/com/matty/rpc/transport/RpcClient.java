@@ -1,4 +1,4 @@
-package com.matty.rpc;
+package com.matty.rpc.transport;
 
 import com.matty.rpc.entity.RpcRequest;
 import com.matty.rpc.serializer.CommonSerializer;

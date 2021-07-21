@@ -1,4 +1,4 @@
-package com.matty.rpc;
+package com.matty.rpc.transport;
 
 import com.matty.rpc.serializer.CommonSerializer;
 
@@ -10,8 +10,16 @@ import com.matty.rpc.serializer.CommonSerializer;
  */
 public interface RpcServer {
 
-    void start(int port);
+    void start();
 
     void setSerializer(CommonSerializer serializer);
+
+    /**
+     * 向Nacos注册服务
+     * @param service
+     * @param serviceClass
+     * @param <T>
+     */
+    <T> void publishService(Object service, Class<T> serviceClass);
 
 }

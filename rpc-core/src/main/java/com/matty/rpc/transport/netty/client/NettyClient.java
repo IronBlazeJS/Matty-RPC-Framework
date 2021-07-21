@@ -1,22 +1,15 @@
-package com.matty.rpc.netty.client;
+package com.matty.rpc.transport.netty.client;
 
-import com.matty.rpc.RpcClient;
-import com.matty.rpc.codec.CommonDecoder;
-import com.matty.rpc.codec.CommonEncoder;
+import com.matty.rpc.register.NacosServiceRegistry;
+import com.matty.rpc.register.ServiceRegistry;
+import com.matty.rpc.transport.RpcClient;
 import com.matty.rpc.entity.RpcRequest;
 import com.matty.rpc.entity.RpcResponse;
 import com.matty.rpc.enumeration.RpcError;
 import com.matty.rpc.exception.RpcException;
 import com.matty.rpc.serializer.CommonSerializer;
-import com.matty.rpc.serializer.HessianSerializer;
-import com.matty.rpc.serializer.JsonSerializer;
-import com.matty.rpc.serializer.KryoSerializer;
 import com.matty.rpc.util.RpcMessageChecker;
-import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,16 +26,12 @@ import java.util.concurrent.atomic.AtomicReference;
 public class NettyClient implements RpcClient {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyClient.class);
-
-    private String host;
-    private int port;
-
+    private final ServiceRegistry serviceRegistry;
 
     private CommonSerializer serializer;
 
-    public NettyClient(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public NettyClient(){
+        serviceRegistry = new NacosServiceRegistry();
     }
 
     @Override
@@ -56,7 +45,10 @@ public class NettyClient implements RpcClient {
         AtomicReference<Object> result = new AtomicReference<>(null);
 
         try {
-            Channel channel = ChannelProvider.get(new InetSocketAddress(host, port), serializer);
+            //从Nacos获取提供对应服务的服务端地址
+            InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
+            //创建Netty通道连接
+            Channel channel = ChannelProvider.get(inetSocketAddress, serializer);
             if (channel.isActive()) {
                 //向服务端发请求，并设置监听，关于writeAndFlush()的具体实现可以参考：https://blog.csdn.net/qq_34436819/article/details/103937188
                 channel.writeAndFlush(rpcRequest).addListener(future1 -> {
