@@ -1,5 +1,6 @@
 package com.matty.test;
 
+import com.matty.rpc.api.ByeService;
 import com.matty.rpc.api.HelloObject;
 import com.matty.rpc.api.HelloService;
 import com.matty.rpc.loadbalancer.RoundRobinLoadBalancer;
@@ -23,10 +24,16 @@ public class SocketTestClient {
         //接口方法的参数对象
         HelloObject object = new HelloObject(12, "This is a test message MATTY");
 
-        for (int i = 0; i < 20; i++) {
-            //由动态代理可知，代理对象调用hello()实际会执行invoke()
-            String res = helloService.hello(object);
-            System.out.println(res);
-        }
+//        for (int i = 0; i < 20; i++) {
+//            //由动态代理可知，代理对象调用hello()实际会执行invoke()
+//            String res = helloService.hello(object);
+//            System.out.println(res);
+//        }
+
+        //由动态代理可知，代理对象调用hello()实际会执行invoke()
+        String res = helloService.hello(object);
+        System.out.println(res);
+        ByeService byeService = proxy.getProxy(ByeService.class);
+        System.out.println(byeService.bye("Socket"));
     }
 }

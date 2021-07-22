@@ -31,13 +31,12 @@ public class ServiceProviderImpl implements ServiceProvider {
     private static final Set<String> registeredService = ConcurrentHashMap.newKeySet();
 
     /**
-     * @param service, serviceClass 服务的实现类对象，服务类（接口）
+     * @param service, serviceName 服务的实现类对象，服务类（接口）
      * @return [void]
      * @description 保存服务到本地服务注册表
      */
     @Override
-    public <T> void addServiceProvider(T service, Class<T> serviceClass) {
-        String serviceName = serviceClass.getCanonicalName();
+    public <T> void addServiceProvider(T service, String serviceName) {
         if (registeredService.contains(serviceName)) {
             return;
         }

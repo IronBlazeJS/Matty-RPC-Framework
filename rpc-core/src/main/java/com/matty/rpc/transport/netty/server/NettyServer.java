@@ -2,15 +2,11 @@ package com.matty.rpc.transport.netty.server;
 
 import com.matty.rpc.codec.CommonDecoder;
 import com.matty.rpc.codec.CommonEncoder;
-import com.matty.rpc.enumeration.RpcError;
-import com.matty.rpc.exception.RpcException;
 import com.matty.rpc.hook.ShutdownHook;
-import com.matty.rpc.provider.ServiceProvider;
 import com.matty.rpc.provider.ServiceProviderImpl;
 import com.matty.rpc.register.NacosServiceRegistry;
-import com.matty.rpc.register.ServiceRegistry;
 import com.matty.rpc.serializer.CommonSerializer;
-import com.matty.rpc.transport.RpcServer;
+import com.matty.rpc.transport.AbstractRpcServer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -19,10 +15,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,15 +24,7 @@ import java.util.concurrent.TimeUnit;
  * date: 2021/7/19  9:26
  * netty方式服务端
  */
-public class NettyServer implements RpcServer {
-
-    private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
-
-    private final String host;
-    private final int port;
-
-    private final ServiceRegistry serviceRegistry;
-    private final ServiceProvider serviceProvider;
+public class NettyServer extends AbstractRpcServer {
 
     private final CommonSerializer serializer;
 
@@ -53,24 +38,9 @@ public class NettyServer implements RpcServer {
         serviceRegistry = new NacosServiceRegistry();
         serviceProvider = new ServiceProviderImpl();
         serializer = CommonSerializer.getByCode(serializerCode);
-    }
 
-    /**
-     * @param service, serviceClass
-     * @return [void]
-     * @description 将服务保存在本地的注册表，同时注册到Nacos
-     */
-    @Override
-    public <T> void publishService(T service, Class<T> serviceClass) {
-        if (serializer == null) {
-            logger.error("未设置序列化器");
-            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
-        }
-        // 本地服务注册
-        serviceProvider.addServiceProvider(service, serviceClass);
-        // 注册中心服务注册
-        serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
-        start();
+        //自动注册服务
+        scanServices();
     }
 
     @Override

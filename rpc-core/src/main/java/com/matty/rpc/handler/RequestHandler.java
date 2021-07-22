@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
  * ClassName: WorkerThread
  * author: Matty Roslak
  * date: 2021/7/16  21:51
- * 具体的方法调用处理器
+ * 具体的方法调用处理器 服务端用的
  */
 public class RequestHandler {
 

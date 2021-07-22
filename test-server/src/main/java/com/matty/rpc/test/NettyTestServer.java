@@ -1,7 +1,8 @@
 package com.matty.rpc.test;
 
-import com.matty.rpc.api.HelloService;
+import com.matty.rpc.annotation.ServiceScan;
 import com.matty.rpc.serializer.CommonSerializer;
+import com.matty.rpc.transport.RpcServer;
 import com.matty.rpc.transport.netty.server.NettyServer;
 
 /**
@@ -10,10 +11,10 @@ import com.matty.rpc.transport.netty.server.NettyServer;
  * date: 2021/7/19  16:53
  * 测试用Netty服务端
  */
+@ServiceScan
 public class NettyTestServer {
     public static void main(String[] args) {
-        HelloService helloService = new HelloServiceImpl();
-        NettyServer server = new NettyServer("127.0.0.1", 9999, CommonSerializer.PROTOBUF_SERIALIZER);
-        server.publishService(helloService, HelloService.class);
+        RpcServer server = new NettyServer("127.0.0.1", 9999, CommonSerializer.PROTOBUF_SERIALIZER);
+        server.start();
     }
 }

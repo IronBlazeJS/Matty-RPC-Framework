@@ -1,5 +1,6 @@
 package com.matty.rpc.test;
 
+import com.matty.rpc.annotation.Service;
 import com.matty.rpc.api.HelloObject;
 import com.matty.rpc.api.HelloService;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
  * date: 2021/7/11  23:59
  * 服务端api接口实现  netty
  */
+@Service
 public class HelloServiceImpl implements HelloService {
 
     /**
@@ -22,6 +24,6 @@ public class HelloServiceImpl implements HelloService {
     public String hello(HelloObject object) {
         //使用{}可以直接将getMessage()内容输出
         logger.info("接收到：{}", object.getMessage());
-        return "这是调用的返回值：id= " + object.getId() + " 本次处理来自Netty服务端";
+        return "这是调用的返回值：id= " + object.getId() + " 成功调用hello()方法";
     }
 }

@@ -1,18 +1,12 @@
 package com.matty.rpc.transport.socket.server;
 
-import com.matty.rpc.enumeration.RpcError;
-import com.matty.rpc.exception.RpcException;
 import com.matty.rpc.factory.ThreadPoolFactory;
 import com.matty.rpc.handler.RequestHandler;
 import com.matty.rpc.hook.ShutdownHook;
-import com.matty.rpc.provider.ServiceProvider;
 import com.matty.rpc.provider.ServiceProviderImpl;
 import com.matty.rpc.register.NacosServiceRegistry;
-import com.matty.rpc.register.ServiceRegistry;
 import com.matty.rpc.serializer.CommonSerializer;
-import com.matty.rpc.transport.RpcServer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.matty.rpc.transport.AbstractRpcServer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -26,18 +20,12 @@ import java.util.concurrent.ExecutorService;
  * date: 2021/7/16  21:32
  * Socket方式进行远程调用连接的服务端
  */
-public class SocketServer implements RpcServer {
-
-    private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
+public class SocketServer extends AbstractRpcServer {
 
     private final ExecutorService threadPool;
-    private final String host;
-    private final int port;
+
     private final CommonSerializer serializer;
     private final RequestHandler requestHandler = new RequestHandler();
-
-    private final ServiceRegistry serviceRegistry;
-    private final ServiceProvider serviceProvider;
 
     public SocketServer(String host, int port) {
         this(host, port, DEFAULT_SERIALIZER);
@@ -53,24 +41,8 @@ public class SocketServer implements RpcServer {
         //创建线程池
         threadPool = ThreadPoolFactory.createDefaultThreadPool("socket-rpc-server");
 
-    }
-
-    /**
-     * 服务保存到本地注册表，同时注册到Nacos
-     *
-     * @param service
-     * @param serviceClass
-     * @param <T>
-     */
-    @Override
-    public <T> void publishService(T service, Class<T> serviceClass) {
-        if (serializer == null) {
-            logger.error("未设置序列化器");
-            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
-        }
-        serviceProvider.addServiceProvider(service, serviceClass);
-        serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
-        start();
+        //自动注册服务
+        scanServices();
     }
 
     /**

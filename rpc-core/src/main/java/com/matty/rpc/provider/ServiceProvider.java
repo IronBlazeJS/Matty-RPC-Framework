@@ -9,12 +9,13 @@ package com.matty.rpc.provider;
 public interface ServiceProvider {
 
     /**
-     * 将一个服务注册进注册表
+     * 将一个服务注册进本地注册表
      *
-     * @param service 待注册的服务实体对象
-     * @param <T>     服务实体的类型
+     * @param service
+     * @param serviceName
+     * @param <T>
      */
-    <T> void addServiceProvider(T service, Class<T> serviceClass);
+    <T> void addServiceProvider(T service, String serviceName);
 
     /**
      * 根据服务名获取服务对象
