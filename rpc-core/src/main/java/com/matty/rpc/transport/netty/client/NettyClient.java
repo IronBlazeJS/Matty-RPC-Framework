@@ -5,6 +5,8 @@ import com.matty.rpc.entity.RpcResponse;
 import com.matty.rpc.enumeration.RpcError;
 import com.matty.rpc.exception.RpcException;
 import com.matty.rpc.factory.SingletonFactory;
+import com.matty.rpc.loadbalancer.LoadBalancer;
+import com.matty.rpc.loadbalancer.RandomLoadBalancer;
 import com.matty.rpc.register.NacosServiceDiscovery;
 import com.matty.rpc.register.ServiceDiscovery;
 import com.matty.rpc.serializer.CommonSerializer;
@@ -49,11 +51,19 @@ public class NettyClient implements RpcClient {
 
     public NettyClient() {
         //以默认序列化器调用构造函数
-        this(DEFAULT_SERIALIZER);
+        this(DEFAULT_SERIALIZER, new RandomLoadBalancer());
+    }
+
+    public NettyClient(LoadBalancer loadBalancer) {
+        this(DEFAULT_SERIALIZER, loadBalancer);
     }
 
     public NettyClient(Integer serializerCode) {
-        serviceDiscovery = new NacosServiceDiscovery();
+        this(serializerCode, new RandomLoadBalancer());
+    }
+
+    public NettyClient(Integer serializerCode, LoadBalancer loadBalancer) {
+        serviceDiscovery = new NacosServiceDiscovery(loadBalancer);
         serializer = CommonSerializer.getByCode(serializerCode);
         unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
     }
